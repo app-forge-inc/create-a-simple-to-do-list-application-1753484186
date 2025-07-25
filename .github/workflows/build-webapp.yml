@@ -1,0 +1,47 @@
+
+name: Build and Deploy WebApp
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'webapp/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    defaults:
+      run:
+        working-directory: ./webapp
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Notify Task Scheduler
+        env:
+          TASK_SCHEDULER_URL: https://dns-senegal-margin-settlement.trycloudflare.com
+        run: |
+          curl -X POST $TASK_SCHEDULER_URL/api/tasks \
+          -H "Content-Type: application/json" \
+          -d '{
+            "project_name": "create-a-simple-to-do-list-application-1753484186",
+            "repo_url": "https://github.com/app-forge-inc/create-a-simple-to-do-list-application-1753484186",
+            "task_details": {
+              "type": "deploy",
+              "command": "docker compose up -d"
+            }
+          }'
