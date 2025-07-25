@@ -33,7 +33,7 @@ jobs:
 
       - name: Notify Task Scheduler
         env:
-          TASK_SCHEDULER_URL: https://dns-senegal-margin-settlement.trycloudflare.com
+          TASK_SCHEDULER_URL: https://olympics-psi-arranged-titled.trycloudflare.com
         run: |
           curl -X POST $TASK_SCHEDULER_URL/api/tasks \
           -H "Content-Type: application/json" \
